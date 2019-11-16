@@ -1,9 +1,11 @@
 package com.example.infs_project.ui.quiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,13 +25,16 @@ public class QuizFragment extends Fragment {
         quizViewModel =
                 ViewModelProviders.of(this).get(QuizViewModel.class);
         View root = inflater.inflate(R.layout.fragment_quiz, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        quizViewModel.getText().observe(this, new Observer<String>() {
+
+        Button quizButton = root.findViewById(R.id.quiz_button);
+        quizButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), QuizActivity.class);
+                startActivity(intent);
             }
         });
+
         return root;
     }
 }
