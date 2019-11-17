@@ -29,27 +29,31 @@
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer1"
-        android:layout_marginTop="80dp"/>
+        android:layout_marginTop="80dp"
+        android:onClick="checkAnswer"/>
 
     <Button
         android:id="@+id/answerBtn2"
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer2"
-        android:layout_marginTop="6dp"/>
+        android:layout_marginTop="6dp"
+        android:onClick="checkAnswer"/>
 
     <Button
         android:id="@+id/answerBtn3"
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer3"
-        android:layout_marginTop="6dp"/>
+        android:layout_marginTop="6dp"
+        android:onClick="checkAnswer"/>
 
     <Button
         android:id="@+id/answerBtn4"
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer4"
-        android:layout_marginTop="6dp"/>
+        android:layout_marginTop="6dp"
+        android:onClick="checkAnswer"/>
 
 </LinearLayout>
