@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,9 +28,6 @@ import java.util.Collections;
 import java.util.Random;
 
 public class QuestionFragment extends Fragment {
-
-    private OnFragmentInteractionListener mListener;
-    private Activity currActivity;
 
     private TextView countLabel;
     private TextView questionLabel;
@@ -47,7 +45,14 @@ public class QuestionFragment extends Fragment {
 
     String quizData [][] = {
             // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3"}
-            {"Question Fake Fake Fake", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"}
+            {"Question Fake Fake 1", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
+            {"Question Fake Fake 2", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
+            {"Question Fake Fake 3", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
+            {"Question Fake Fake 4", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
+            {"Question Fake Fake 5", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
+            {"Question Fake Fake 6", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
+            {"Question Fake Fake 7", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
+            {"Question Fake Fake 8", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"}
     };
 
     public QuestionFragment() {
@@ -58,31 +63,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currActivity = getActivity();
 
-        countLabel = (TextView) currActivity.findViewById(R.id.count_label);
-        questionLabel = (TextView) currActivity.findViewById(R.id.question_label);
-        answerBtn1 = (Button) currActivity.findViewById(R.id.answerBtn1);
-        answerBtn2 = (Button) currActivity.findViewById(R.id.answerBtn2);
-        answerBtn3 = (Button) currActivity.findViewById(R.id.answerBtn3);
-        answerBtn4 = (Button) currActivity.findViewById(R.id.answerBtn4);
-
-        // Create quizArray from quizData
-        for (int i = 0; i < quizData.length; i++) {
-            // Prepare array
-            ArrayList<String> tmpArray = new ArrayList<>();
-            tmpArray.add(quizData[i][0]); // Question
-            tmpArray.add(quizData[i][1]); // Right Answer
-            tmpArray.add(quizData[i][2]); // Choice1
-            tmpArray.add(quizData[i][3]); // Choice2
-            tmpArray.add(quizData[i][4]); // Choice3
-
-
-            // Add tmpArray to quizArray
-            quizArray.add(tmpArray);
-        }
-
-        showNextQuiz();
 
     }
 
@@ -118,95 +99,94 @@ public class QuestionFragment extends Fragment {
 
     }
 
-    public void checkAnswer(View view) {
+    public class checkAnswer implements OnClickListener {
 
-        // Get pushed button
-        Button answerBtn = (Button) currActivity.findViewById(view.getId());
-        String btnText = answerBtn.getText().toString();
+        @Override
+        public void onClick(View v) {
 
-        String alertTitle;
+            // Get pushed button
+            Button answerBtn = (Button) getActivity().findViewById(v.getId());
+            String btnText = answerBtn.getText().toString();
 
-        if(btnText.equals(rightAnswer)) {
-            //Correct!
-            alertTitle = "Correct!";
-            rightAnswerCount++;
-        } else {
-            // Wrong...
-            alertTitle = "Wrong...";
-        }
+            String alertTitle;
 
-        // Create Dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(currActivity);
-        builder.setTitle(alertTitle);
-        builder.setMessage("Answer: " + rightAnswer);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (quizCount == QUIZ_COUNT) {
-                    // Show Result
-                    Fragment endQuizFrag = new EndQuizFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("RIGHT_ANSWER_COUNT", rightAnswerCount);
-                    endQuizFrag.setArguments(bundle);
-                    FragmentTransaction fr = getFragmentManager().beginTransaction();
-
-                    fr.replace(R.id.fragment_container, endQuizFrag);
-
-                } else {
-                    quizCount++;
-                    showNextQuiz();
-                }
+            if (btnText.equals(rightAnswer)) {
+                //Correct!
+                alertTitle = "Correct!";
+                rightAnswerCount++;
+            } else {
+                // Wrong...
+                alertTitle = "Wrong...";
             }
-        });
 
-        builder.setCancelable(false);
-        builder.show();
+            // Create Dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(alertTitle);
+            builder.setMessage("Answer: " + rightAnswer);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (quizCount == QUIZ_COUNT) {
+                        // Show Result
+                        Fragment endQuizFrag = new EndQuizFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("RIGHT_ANSWER_COUNT", rightAnswerCount);
+                        endQuizFrag.setArguments(bundle);
+                        FragmentTransaction fr = getFragmentManager().beginTransaction();
 
+                        fr.replace(R.id.fragment_container, endQuizFrag);
+                        fr.commit();
+
+                    } else {
+                        quizCount++;
+                        showNextQuiz();
+                    }
+                }
+            });
+
+            builder.setCancelable(false);
+            builder.show();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_question, container, false);
-    }
+        View view =  inflater.inflate(R.layout.fragment_question, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
+        countLabel = (TextView) view.findViewById(R.id.count_label);
+        questionLabel = (TextView) view.findViewById(R.id.question_label);
+        answerBtn1 = (Button) view.findViewById(R.id.answerBtn1);
+        answerBtn2 = (Button) view.findViewById(R.id.answerBtn2);
+        answerBtn3 = (Button) view.findViewById(R.id.answerBtn3);
+        answerBtn4 = (Button) view.findViewById(R.id.answerBtn4);
+
+        answerBtn1.setOnClickListener(new checkAnswer());
+        answerBtn2.setOnClickListener(new checkAnswer());
+        answerBtn3.setOnClickListener(new checkAnswer());
+        answerBtn4.setOnClickListener(new checkAnswer());
+
+        // Create quizArray from quizData
+        for (int i = 0; i < quizData.length; i++) {
+            // Prepare array
+            ArrayList<String> tmpArray = new ArrayList<>();
+            tmpArray.add(quizData[i][0]); // Question
+            tmpArray.add(quizData[i][1]); // Right Answer
+            tmpArray.add(quizData[i][2]); // Choice1
+            tmpArray.add(quizData[i][3]); // Choice2
+            tmpArray.add(quizData[i][4]); // Choice3
+
+
+            // Add tmpArray to quizArray
+            quizArray.add(tmpArray);
         }
+
+        showNextQuiz();
+
+        return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

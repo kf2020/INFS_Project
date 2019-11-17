@@ -32,11 +32,11 @@
         android:layout_marginTop="60dp"/>
 
     <Button
+        android:id="@+id/return_btn"
         android:layout_width="140dp"
         android:layout_height="50dp"
         android:text="return"
         android:textSize="18sp"
-        android:layout_marginTop="80dp"
-        android:onClick="returnTop"/>
+        android:layout_marginTop="80dp"/>
 
 </LinearLayout>
