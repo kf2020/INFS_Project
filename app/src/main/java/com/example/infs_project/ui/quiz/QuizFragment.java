@@ -25,15 +25,18 @@ import com.example.infs_project.R;
 import com.example.infs_project.RecipesDatabase;
 import com.example.infs_project.async.InsertRecipesAsyncDelegate;
 import com.example.infs_project.async.InsertRecipesAsyncTask;
+import com.example.infs_project.model.RandomResponse;
 import com.example.infs_project.model.Recipe;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class QuizFragment extends Fragment {
 
     private QuizViewModel quizViewModel;
+    private Button quizButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class QuizFragment extends Fragment {
                 ViewModelProviders.of(this).get(QuizViewModel.class);
         View root = inflater.inflate(R.layout.fragment_quiz, container, false);
 
-        Button quizButton = root.findViewById(R.id.quiz_button);
+        quizButton = root.findViewById(R.id.quiz_button);
         quizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,6 +54,8 @@ public class QuizFragment extends Fragment {
         });
 
 
+
         return root;
     }
+
 }

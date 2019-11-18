@@ -7,6 +7,34 @@
     android:orientation="vertical"
     tools:context=".ui.quiz.quiz_activity_fragments.QuestionFragment">
 
+    <LinearLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/fruitcandy">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="75dp"
+            android:text="Loading..."
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="42dp"
+            android:text="Please be patient!"/>
+
+    </LinearLayout>
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/count_label"
