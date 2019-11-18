@@ -51,53 +51,6 @@ public class QuizFragment extends Fragment {
         });
 
 
-        //Star volley and gson
-        final RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
-
-        //Need correct api url with key
-        String url = "https://api.spoonacular.com/recipes/informationBulk";
-
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Recipe[] objectsArray = gson.fromJson(response, Recipe[].class);
-                List<Recipe> objectsList = Arrays.asList(objectsArray);
-                //Testing to see array contents
-                //for (Recipe r : objectsList) { System.out.println(r); }
-
-                RecipesDatabase db = RecipesDatabase.getInstance(getContext());
-
-                InsertRecipesAsyncTask insertRecipesAsyncTask = new InsertRecipesAsyncTask();
-                insertRecipesAsyncTask.setDatabase(db);
-
-                insertRecipesAsyncTask.setDelegate((InsertRecipesAsyncDelegate) QuizFragment.this);
-
-                Recipe[] recipes = objectsList.toArray(new Recipe[objectsList.size()]);
-                //Testing to see array contents
-                //for (Recipe r : recipes) { System.out.println(r); }
-
-                insertRecipesAsyncTask.execute(recipes);
-
-                requestQueue.stop();
-            }
-        };
-
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(),"The request failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                requestQueue.stop();
-            }
-        };
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener,
-                errorListener);
-
-        requestQueue.add(stringRequest);
-        //End volley and gson
-
-
         return root;
     }
 }

@@ -16,15 +16,31 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.infs_project.R;
+import com.example.infs_project.RecipesDatabase;
+import com.example.infs_project.async.InsertRecipesAsyncDelegate;
+import com.example.infs_project.async.InsertRecipesAsyncTask;
+import com.example.infs_project.model.RandomResponse;
+import com.example.infs_project.model.Recipe;
+import com.example.infs_project.ui.quiz.QuizFragment;
+import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class QuestionFragment extends Fragment {
@@ -64,6 +80,54 @@ public class QuestionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Start volley and gson
+        final RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
+
+        //Need correct api url with key
+        String url = "https://api.spoonacular.com/recipes/random?number=6&apiKey=86828503a4f24dc5acab1e6988ce07e4";
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(getContext(),"The request didn't fail", Toast.LENGTH_SHORT).show();
+                System.out.println(response);
+                Gson gson = new Gson();
+                RandomResponse randomResponse = gson.fromJson(response, RandomResponse.class);
+                List<Recipe> objectsList = Arrays.asList(randomResponse.getRecipes());
+                //Testing to see array contents
+                for (Recipe r : objectsList) { System.out.println(r); }
+
+                RecipesDatabase db = RecipesDatabase.getInstance(getContext());
+
+                InsertRecipesAsyncTask insertRecipesAsyncTask = new InsertRecipesAsyncTask();
+                insertRecipesAsyncTask.setDatabase(db);
+
+                insertRecipesAsyncTask.setDelegate((InsertRecipesAsyncDelegate) QuestionFragment.this);
+
+                Recipe[] recipes = objectsList.toArray(new Recipe[objectsList.size()]);
+                //Testing to see array contents
+                //for (Recipe r : recipes) { System.out.println(r); }
+
+                insertRecipesAsyncTask.execute(recipes);
+
+                requestQueue.stop();
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),"The request failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                System.out.println("I failed");
+                requestQueue.stop();
+            }
+        };
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener,
+                errorListener);
+
+        requestQueue.add(stringRequest);
+        //End volley and gson
 
     }
 
