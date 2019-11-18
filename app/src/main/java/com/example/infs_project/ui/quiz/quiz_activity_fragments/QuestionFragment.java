@@ -31,6 +31,7 @@ import com.example.infs_project.R;
 import com.example.infs_project.RecipesDatabase;
 import com.example.infs_project.async.InsertRecipesAsyncDelegate;
 import com.example.infs_project.async.InsertRecipesAsyncTask;
+import com.example.infs_project.model.NutritionWidgetResponse;
 import com.example.infs_project.model.RandomResponse;
 import com.example.infs_project.model.Recipe;
 import com.example.infs_project.ui.quiz.QuizFragment;
@@ -63,17 +64,9 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
 
     ArrayList<ArrayList<String>> quizArray = new ArrayList<>();
 
-    String quizData [][] = {
+    String quizData[][] = new String[5][5];
             // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3"}
-            {"Question Fake Fake 1", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
-            {"Question Fake Fake 2", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
-            {"Question Fake Fake 3", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
-            {"Question Fake Fake 4", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
-            {"Question Fake Fake 5", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
-            {"Question Fake Fake 6", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
-            {"Question Fake Fake 7", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"},
-            {"Question Fake Fake 8", "I'm right!", "Choose me", "Choose me 2", "Choose me 3"}
-    };
+
 
     public QuestionFragment() {
         // Required empty public constructor
@@ -183,36 +176,73 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
         //Start volley and gson
         final RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
 
-        //Need correct api url with key
-        String url = "https://api.spoonacular.com/recipes/random?number=6&apiKey=86828503a4f24dc5acab1e6988ce07e4";
+        //Need correct api url with key to get 5 random recipes
+        String url = "https://api.spoonacular.com/recipes/random?number=5&apiKey=86828503a4f24dc5acab1e6988ce07e4";
 
         final InsertRecipesAsyncDelegate insertRecipesAsyncDelegate = this;
+        final Recipe recipesArr[] = new Recipe[5];
 
+        // create response listener
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 RandomResponse randomResponse = gson.fromJson(response, RandomResponse.class);
-                List<Recipe> objectsList = Arrays.asList(randomResponse.getRecipes());
-                //Testing to see array contents
-                //for (Recipe r : objectsList) { System.out.println(r); }
+                List<Recipe> recipes = Arrays.asList(randomResponse.getRecipes());
 
+                Recipe[] localArr = recipes.toArray(new Recipe[recipes.size()]);
+                for (int i = 0; i <5; i++) {
+                    recipesArr[i] = localArr[i];
+                }
                 RecipesDatabase db = RecipesDatabase.getInstance(getContext());
 
+
+                // Async Task to insert recipes into DB
                 InsertRecipesAsyncTask insertRecipesAsyncTask = new InsertRecipesAsyncTask();
                 insertRecipesAsyncTask.setDatabase(db);
-
                 insertRecipesAsyncTask.setDelegate(insertRecipesAsyncDelegate);
+                insertRecipesAsyncTask.execute(recipesArr);
 
-                Recipe[] recipes = objectsList.toArray(new Recipe[objectsList.size()]);
-                //Testing to see array contents
-                //for (Recipe r : recipes) { System.out.println(r); }
+                // For each of the recipes, get their calories
+                for(int i = 0; i < 5 ; i++) {
 
-                insertRecipesAsyncTask.execute(recipes);
+                    //Need correct api url with key to get 5 random recipes
+                    String url2 = "https://api.spoonacular.com/recipes/"+recipesArr[i].getId()+"/nutritionWidget.json?apiKey=86828503a4f24dc5acab1e6988ce07e4";
 
-                requestQueue.stop();
 
-                loadingLayout.setVisibility(View.GONE);
+                    // create response listener
+                    final int finalI = i;
+                    Response.Listener<String> responseListener2 = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Gson gson = new Gson();
+                            NutritionWidgetResponse nutritionWidgetResponse = gson.fromJson(response, NutritionWidgetResponse.class);
+                            recipesArr[finalI].setCalories(nutritionWidgetResponse.getCalories());
+
+                            if (recipesArr[0].getCalories() != 0 && recipesArr[1].getCalories() != 0 && recipesArr[2].getCalories() != 0 && recipesArr[3].getCalories() != 0 && recipesArr[4].getCalories() != 0) {
+                                setUpQuizQuestions(recipesArr);
+                                requestQueue.stop();
+                            }
+                        }
+                    };
+
+                    Response.ErrorListener errorListener2 = new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getContext(),"The request failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            requestQueue.stop();
+                            Intent i = new Intent(getActivity(), MainActivity.class);
+                            startActivity(i);
+                        }
+                    };
+
+                    StringRequest stringRequest2 = new StringRequest(Request.Method.GET, url2, responseListener2,
+                            errorListener2);
+
+                    requestQueue.add(stringRequest2);
+
+                }
+
             }
         };
 
@@ -230,6 +260,8 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
                 errorListener);
 
         requestQueue.add(stringRequest);
+
+
         //End volley and gson
 
 
@@ -245,6 +277,28 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
         answerBtn3.setOnClickListener(new checkAnswer());
         answerBtn4.setOnClickListener(new checkAnswer());
 
+        return view;
+    }
+
+    private void setUpQuizQuestions(Recipe[] recipesArr) {
+        // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3"}
+        for (int i = 0; i < 5; i++) {
+            quizData[i][0] = "How many calories do you think this recipe has: "+recipesArr[i].getTitle();
+            int calories = recipesArr[i].getCalories();
+            quizData[i][1] = Integer.toString(calories);
+
+            // calculate random numbers for other answers
+            Random random = new Random();
+            int low = calories > 150 ? calories - 100 : 25;
+            int high = calories + 350;
+
+            quizData[i][2] = Integer.toString(random.nextInt(high-low)+low);
+            quizData[i][3] = Integer.toString(random.nextInt(high-low)+low);
+            quizData[i][4] = Integer.toString(random.nextInt(high-low)+low);
+        }
+
+        loadingLayout.setVisibility(View.GONE);
+
         // Create quizArray from quizData
         for (int i = 0; i < quizData.length; i++) {
             // Prepare array
@@ -259,10 +313,7 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
             // Add tmpArray to quizArray
             quizArray.add(tmpArray);
         }
-
         showNextQuiz();
-
-        return view;
     }
 
 
