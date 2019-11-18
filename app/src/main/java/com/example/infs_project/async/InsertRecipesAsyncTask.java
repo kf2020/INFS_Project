@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.example.infs_project.model.Recipe;
 import com.example.infs_project.RecipesDatabase;
+import com.example.infs_project.ui.quiz.QuizFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,5 +59,6 @@ public class InsertRecipesAsyncTask extends AsyncTask<Recipe, Integer, ArrayList
         // TODO: Call the delegate's method with the results
         delegate.processFinish(result);
     }
+
 }
 
