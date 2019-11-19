@@ -14,6 +14,8 @@ public class Recipe {
     float spoonacularScore;
 
     int calories;
+    int readyInMinutes;
+    String description;
 
 
     public long getId() {
