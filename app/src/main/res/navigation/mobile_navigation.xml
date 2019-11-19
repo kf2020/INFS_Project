@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_recipes"
-        android:name="com.example.infs_project.ui.recipes.RecipesFragment"
+        android:name="com.example.infs_project.ui.triviaQuiz.TriviaQuizFragment"
         android:label="@string/title_recipes"
         tools:layout="@layout/fragment_recipes" />
 

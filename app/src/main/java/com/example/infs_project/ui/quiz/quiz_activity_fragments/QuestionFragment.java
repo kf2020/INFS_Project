@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,9 +24,11 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.infs_project.MainActivity;
 import com.example.infs_project.R;
 import com.example.infs_project.RecipesDatabase;
@@ -52,6 +55,8 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
 
     private TextView countLabel;
     private TextView questionLabel;
+    private ImageView recipeImage;
+    private TextView recipeImageLoadingLabel;
     private Button answerBtn1;
     private Button answerBtn2;
     private Button answerBtn3;
@@ -64,8 +69,8 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
 
     ArrayList<ArrayList<String>> quizArray = new ArrayList<>();
 
-    String quizData[][] = new String[5][5];
-            // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3"}
+    String quizData[][] = new String[5][6];
+            // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3", "imageURL"}
 
 
     public QuestionFragment() {
@@ -79,6 +84,8 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
     }
 
     public void showNextQuiz() {
+
+        recipeImageLoadingLabel.setVisibility(View.VISIBLE);
 
         // Update quizCountLabel
         countLabel.setText("Question "+quizCount);
@@ -95,7 +102,13 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
         questionLabel.setText(quiz.get(0));
         rightAnswer = quiz.get(1);
 
+        if (quiz.get(5) != null && quiz.get(5) != null) {
+            recipeImageLoadingLabel.setVisibility(View.GONE);
+            Glide.with(getContext()).load(quiz.get(5)).into(recipeImage);
+        }
+
         // Remove "Question" from quiz and shuffle choices
+        quiz.remove(5);
         quiz.remove(0);
         Collections.shuffle(quiz);
 
@@ -105,8 +118,6 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
         answerBtn3.setText(quiz.get(2));
         answerBtn4.setText(quiz.get(3));
 
-        // Remove this quiz from quizArray
-        quizArray.remove(randomNum);
 
     }
 
@@ -226,6 +237,8 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
                         }
                     };
 
+
+
                     Response.ErrorListener errorListener2 = new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
@@ -238,6 +251,23 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
 
                     StringRequest stringRequest2 = new StringRequest(Request.Method.GET, url2, responseListener2,
                             errorListener2);
+
+//                    stringRequest2.setRetryPolicy(new RetryPolicy() {
+//                        @Override
+//                        public int getCurrentTimeout() {
+//                            return 50000;
+//                        }
+//
+//                        @Override
+//                        public int getCurrentRetryCount() {
+//                            return 50000;
+//                        }
+//
+//                        @Override
+//                        public void retry(VolleyError error) throws VolleyError {
+//
+//                        }
+//                    });
 
                     requestQueue.add(stringRequest2);
 
@@ -267,6 +297,8 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
 
         countLabel = (TextView) view.findViewById(R.id.count_label);
         questionLabel = (TextView) view.findViewById(R.id.question_label);
+        recipeImage = (ImageView) view.findViewById(R.id.recipe_image);
+        recipeImageLoadingLabel = (TextView) view.findViewById(R.id.loading_image_label);
         answerBtn1 = (Button) view.findViewById(R.id.answerBtn1);
         answerBtn2 = (Button) view.findViewById(R.id.answerBtn2);
         answerBtn3 = (Button) view.findViewById(R.id.answerBtn3);
@@ -281,20 +313,49 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
     }
 
     private void setUpQuizQuestions(Recipe[] recipesArr) {
-        // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3"}
+        // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3", "imageURL"}
         for (int i = 0; i < 5; i++) {
             quizData[i][0] = "How many calories do you think this recipe has: "+recipesArr[i].getTitle();
             int calories = recipesArr[i].getCalories();
             quizData[i][1] = Integer.toString(calories);
+            quizData[i][5] = recipesArr[i].getImage();
 
             // calculate random numbers for other answers
             Random random = new Random();
             int low = calories > 150 ? calories - 100 : 25;
             int high = calories + 350;
 
-            quizData[i][2] = Integer.toString(random.nextInt(high-low)+low);
-            quizData[i][3] = Integer.toString(random.nextInt(high-low)+low);
-            quizData[i][4] = Integer.toString(random.nextInt(high-low)+low);
+            int wrong1 = 0;
+            int wrong2 = 0;
+            int wrong3 = 0;
+            for(int j = 0; j < 3; j++) {
+                int next = random.nextInt(high-low)+low;
+
+                switch (j) {
+                    case 0 :
+                        while (Math.abs(next-calories) < 100) {
+                            next = random.nextInt(high - low) + low;
+                        }
+                        wrong1 = next;
+                        quizData[i][2] = Integer.toString(wrong1);
+                        break;
+                    case 1 :
+                        while (Math.abs(next-calories) < 100 || Math.abs(next-wrong1) < 100) {
+                            next = random.nextInt(high-low)+low;
+                        }
+                        wrong2 = next;
+                        quizData[i][3] = Integer.toString(wrong2);
+                        break;
+                    case 2:
+                        while (Math.abs(next-calories) < 100 || Math.abs(next-wrong1) < 100 || Math.abs(next-wrong2) < 100) {
+                            next = random.nextInt(high-low)+low;
+                        }
+                        wrong3 = next;
+                        quizData[i][4] = Integer.toString(wrong3);
+                        break;
+                }
+
+            }
         }
 
         loadingLayout.setVisibility(View.GONE);
@@ -308,6 +369,7 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
             tmpArray.add(quizData[i][2]); // Choice1
             tmpArray.add(quizData[i][3]); // Choice2
             tmpArray.add(quizData[i][4]); // Choice3
+            tmpArray.add(quizData[i][5]); // ImageURL
 
 
             // Add tmpArray to quizArray

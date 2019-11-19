@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".ui.quiz.quiz_activity_fragments.QuestionFragment">
@@ -48,40 +49,59 @@
         android:id="@+id/question_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Question ....."
+        android:gravity="center"
+        android:text="Question Question Question Question Question Question"
         android:textSize="24sp"
-        android:layout_marginTop="60dp"/>
+        android:layout_marginTop="25dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@android:color/darker_gray"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/recipe_image"
+            android:layout_width="150dp"
+            android:layout_height="100dp"/>
+        <TextView
+            android:id="@+id/loading_image_label"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Loading..."/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/answerBtn1"
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer1"
-        android:layout_marginTop="80dp"
-        android:onClick="checkAnswer"/>
+        android:layout_marginTop="35dp"/>
 
     <Button
         android:id="@+id/answerBtn2"
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer2"
-        android:layout_marginTop="6dp"
-        android:onClick="checkAnswer"/>
+        android:layout_marginTop="6dp"/>
 
     <Button
         android:id="@+id/answerBtn3"
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer3"
-        android:layout_marginTop="6dp"
-        android:onClick="checkAnswer"/>
+        android:layout_marginTop="6dp"/>
 
     <Button
         android:id="@+id/answerBtn4"
         android:layout_width="@dimen/answerBtn_width"
         android:layout_height="@dimen/answerBtn_height"
         android:text="answer4"
-        android:layout_marginTop="6dp"
-        android:onClick="checkAnswer"/>
+        android:layout_marginTop="6dp"/>
 
 </LinearLayout>
