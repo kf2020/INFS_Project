@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".ui.quiz.quiz_activity_fragments.QuestionFragment">
+
+    <LinearLayout
+        android:id="@+id/trivia_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/fruitcandy">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="75dp"
+            android:text="Loading..."
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="42dp"
+            android:text="Please be patient!"/>
+
+    </LinearLayout>
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/trivia_count_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Question 1"
+        android:textSize="22sp"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/trivia_question_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Which fact is true?"
+        android:textSize="24sp"
+        android:layout_marginTop="25dp"/>
+
+
+    <Button
+        android:id="@+id/trivia_answerBtn1"
+        android:layout_width="@dimen/answerBtn_width"
+        android:layout_height="wrap_content"
+        android:text="answer1"
+        android:layout_marginTop="35dp"/>
+
+    <Button
+        android:id="@+id/trivia_answerBtn2"
+        android:layout_width="@dimen/answerBtn_width"
+        android:layout_height="wrap_content"
+        android:text="answer2"
+        android:layout_marginTop="6dp"/>
+
+
+
+</LinearLayout>

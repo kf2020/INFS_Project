@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_quiz" />
 
     <fragment
-        android:id="@+id/navigation_recipes"
+        android:id="@+id/navigation_trivia"
         android:name="com.example.infs_project.ui.triviaQuiz.TriviaQuizFragment"
         android:label="@string/title_recipes"
-        tools:layout="@layout/fragment_recipes" />
+        tools:layout="@layout/fragment_trivia" />
 
     <fragment
         android:id="@+id/navigation_profile"

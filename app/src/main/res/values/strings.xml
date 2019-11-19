@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">INFS_Project</string>
-    <string name="title_quiz">Quiz</string>
-    <string name="title_recipes">Recipes</string>
+    <string name="title_quiz">Calories Quiz</string>
+    <string name="title_recipes">Trivia Quiz</string>
     <string name="title_profile">Profile</string>
 
     <!-- TODO: Remove or change this placeholder text -->

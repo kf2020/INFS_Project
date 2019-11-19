@@ -7,7 +7,7 @@
         android:title="@string/title_quiz" />
 
     <item
-        android:id="@+id/navigation_recipes"
+        android:id="@+id/navigation_trivia"
         android:icon="@drawable/baseline_list_black_18dp"
         android:title="@string/title_recipes" />
 
