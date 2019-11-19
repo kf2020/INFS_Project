@@ -190,10 +190,10 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
         final RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
 
         //Need correct api url with key to get 5 random recipes
-        String url = "https://api.spoonacular.com/recipes/random?number=5&apiKey=86828503a4f24dc5acab1e6988ce07e4";
+        String url = "https://api.spoonacular.com/recipes/random?number=10&apiKey=86828503a4f24dc5acab1e6988ce07e4";
 
         final InsertRecipesAsyncDelegate insertRecipesAsyncDelegate = this;
-        final Recipe recipesArr[] = new Recipe[5];
+        final Recipe recipesArr[] = new Recipe[10];
 
         // create response listener
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -204,7 +204,7 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
                 List<Recipe> recipes = Arrays.asList(randomResponse.getRecipes());
 
                 Recipe[] localArr = recipes.toArray(new Recipe[recipes.size()]);
-                for (int i = 0; i <5; i++) {
+                for (int i = 0; i < 10; i++) {
                     recipesArr[i] = localArr[i];
                 }
                 RecipesDatabase db = RecipesDatabase.getInstance(getContext());
@@ -216,8 +216,11 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
                 insertRecipesAsyncTask.setDelegate(insertRecipesAsyncDelegate);
                 insertRecipesAsyncTask.execute(recipesArr);
 
+                final ArrayList<Integer> numResponses = new ArrayList<>();
+                numResponses.add(0);
+
                 // For each of the recipes, get their calories
-                for(int i = 0; i < 5 ; i++) {
+                for(int i = 0; i < 10 ; i++) {
 
                     //Need correct api url with key to get 5 random recipes
                     String url2 = "https://api.spoonacular.com/recipes/"+recipesArr[i].getId()+"/nutritionWidget.json?apiKey=86828503a4f24dc5acab1e6988ce07e4";
@@ -231,8 +234,9 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
                             Gson gson = new Gson();
                             NutritionWidgetResponse nutritionWidgetResponse = gson.fromJson(response, NutritionWidgetResponse.class);
                             recipesArr[finalI].setCalories(nutritionWidgetResponse.getCalories());
+                            numResponses.set(0, numResponses.get(0)+1);
 
-                            if (recipesArr[0].getCalories() != 0 && recipesArr[1].getCalories() != 0 && recipesArr[2].getCalories() != 0 && recipesArr[3].getCalories() != 0 && recipesArr[4].getCalories() != 0) {
+                            if (numResponses.get(0) == 10) {
                                 setUpQuizQuestions(recipesArr);
                                 requestQueue.stop();
                             }
@@ -316,63 +320,70 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
 
     private void setUpQuizQuestions(Recipe[] recipesArr) {
         // {"Question", "Right Answer", "Choice1", "Choice2", "Choice3", "imageURL"}
-        for (int i = 0; i < 5; i++) {
-            quizData[i][0] = "How many calories do you think this recipe has: "+recipesArr[i].getTitle();
-            int calories = recipesArr[i].getCalories();
-            quizData[i][1] = Integer.toString(calories);
-            quizData[i][5] = recipesArr[i].getImage();
+        int i = 0, iter = 0;
+        while (quizData[4][0] == null && iter < 10) {
+            if (recipesArr[iter].getCalories() > 0) {
+                quizData[i][0] = "How many calories do you think this recipe has: " + recipesArr[i].getTitle();
+                int calories = recipesArr[i].getCalories();
+                quizData[i][1] = Integer.toString(calories);
+                quizData[i][5] = recipesArr[i].getImage();
 
-            // calculate random numbers for other answers
-            Random random = new Random();
-            int low = calories > 150 ? calories - 100 : 25;
-            int high = calories + 350;
+                // calculate random numbers for other answers
+                Random random = new Random();
+                int low = calories > 150 ? calories - 100 : 25;
+                int high = calories + 350;
 
-            int wrong1 = 0;
-            int wrong2 = 0;
-            int wrong3 = 0;
-            for(int j = 0; j < 3; j++) {
-                int next = random.nextInt(high-low)+low;
+                int wrong1 = 0;
+                int wrong2 = 0;
+                int wrong3 = 0;
+                for (int j = 0; j < 3; j++) {
+                    int next = random.nextInt(high - low) + low;
 
-                switch (j) {
-                    case 0 :
-                        while (Math.abs(next-calories) < 100) {
-                            next = random.nextInt(high - low) + low;
-                        }
-                        wrong1 = next;
-                        quizData[i][2] = Integer.toString(wrong1);
-                        break;
-                    case 1 :
-                        while (Math.abs(next-calories) < 100 || Math.abs(next-wrong1) < 100) {
-                            next = random.nextInt(high-low)+low;
-                        }
-                        wrong2 = next;
-                        quizData[i][3] = Integer.toString(wrong2);
-                        break;
-                    case 2:
-                        while (Math.abs(next-calories) < 100 || Math.abs(next-wrong1) < 100 || Math.abs(next-wrong2) < 100) {
-                            next = random.nextInt(high-low)+low;
-                        }
-                        wrong3 = next;
-                        quizData[i][4] = Integer.toString(wrong3);
-                        break;
+                    switch (j) {
+                        case 0:
+                            while (Math.abs(next - calories) < 100) {
+                                next = random.nextInt(high - low) + low;
+                            }
+                            wrong1 = next;
+                            quizData[i][2] = Integer.toString(wrong1);
+                            break;
+                        case 1:
+                            while (Math.abs(next - calories) < 100 || Math.abs(next - wrong1) < 100) {
+                                next = random.nextInt(high - low) + low;
+                            }
+                            wrong2 = next;
+                            quizData[i][3] = Integer.toString(wrong2);
+                            break;
+                        case 2:
+                            while (Math.abs(next - calories) < 100 || Math.abs(next - wrong1) < 100 || Math.abs(next - wrong2) < 100) {
+                                next = random.nextInt(high - low) + low;
+                            }
+                            wrong3 = next;
+                            quizData[i][4] = Integer.toString(wrong3);
+                            break;
+                    }
+
                 }
-
+                i++;
             }
-            System.out.println("name:"+quizData[i][0] +"right: "+quizData[i][1] +"   wrong1: "+quizData[i][2]+"   wrong2: "+quizData[i][3]+"   wrong3: "+quizData[i][4]+"   imageURL: "+quizData[i][5]);
+
+            iter++;
         }
+        //System.out.println("name:"+quizData[i][0] +"right: "+quizData[i][1] +"   wrong1: "+quizData[i][2]+"   wrong2: "+quizData[i][3]+"   wrong3: "+quizData[i][4]+"   imageURL: "+quizData[i][5]);
+
 
         loadingLayout.setVisibility(View.GONE);
 
         // Create quizArray from quizData
-        for (int i = 0; i < quizData.length; i++) {
+        for (int j = 0; j < quizData.length; j++) {
             // Prepare array
             ArrayList<String> tmpArray = new ArrayList<>();
-            tmpArray.add(quizData[i][0]); // Question
-            tmpArray.add(quizData[i][1]); // Right Answer
-            tmpArray.add(quizData[i][2]); // Choice1
-            tmpArray.add(quizData[i][3]); // Choice2
-            tmpArray.add(quizData[i][4]); // Choice3
-            tmpArray.add(quizData[i][5]); // ImageURL
+            tmpArray.add(quizData[j][0]); // Question
+            tmpArray.add(quizData[j][1]); // Right Answer
+            tmpArray.add(quizData[j][2]); // Choice1
+            tmpArray.add(quizData[j][3]); // Choice2
+            tmpArray.add(quizData[j][4]); // Choice3
+            tmpArray.add(quizData[j][5]); // ImageURL
 
 
             // Add tmpArray to quizArray
