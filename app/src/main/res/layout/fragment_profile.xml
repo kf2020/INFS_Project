@@ -16,43 +16,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@+id/text_notifications"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:id="@+id/totalPointsTitle"
-        android:text="Total Points: " />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@+id/text_notifications"
-        app:layout_constraintStart_toEndOf="@+id/totalPointsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:id="@+id/totalPoints" />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@+id/totalPointsTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:id="@+id/totalQuizzTitle"
-        android:text="Total Quizz: " />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@+id/totalPoints"
-        app:layout_constraintStart_toEndOf="@+id/totalPointsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:id="@+id/totalQuizz" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
