@@ -97,28 +97,30 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
         // Pick one quiz set
         ArrayList<String> quiz = quizArray.get(randomNum);
 
+        System.out.println(quiz);
         // Set question and right answer
         // Array Format: {"Question", "Right Answer", "Choice1", "Choice2", "Choice3"}
         questionLabel.setText(quiz.get(0));
         rightAnswer = quiz.get(1);
 
-        if (quiz.get(5) != null && quiz.get(5) != null) {
+        if (quiz.size() > 5 && quiz.get(5) != null && quiz.get(5) != null) {
             recipeImageLoadingLabel.setVisibility(View.GONE);
             Glide.with(getContext()).load(quiz.get(5)).into(recipeImage);
+            quiz.remove(5);
         }
 
         // Remove "Question" from quiz and shuffle choices
-        quiz.remove(5);
+
         quiz.remove(0);
         Collections.shuffle(quiz);
-
         // Set choices
+        System.out.println(quiz);
         answerBtn1.setText(quiz.get(0));
         answerBtn2.setText(quiz.get(1));
         answerBtn3.setText(quiz.get(2));
         answerBtn4.setText(quiz.get(3));
 
-
+        quizArray.remove(randomNum);
     }
 
     @Override
@@ -356,6 +358,7 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
                 }
 
             }
+            System.out.println("name:"+quizData[i][0] +"right: "+quizData[i][1] +"   wrong1: "+quizData[i][2]+"   wrong2: "+quizData[i][3]+"   wrong3: "+quizData[i][4]+"   imageURL: "+quizData[i][5]);
         }
 
         loadingLayout.setVisibility(View.GONE);
@@ -375,6 +378,7 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
             // Add tmpArray to quizArray
             quizArray.add(tmpArray);
         }
+
         showNextQuiz();
     }
 
