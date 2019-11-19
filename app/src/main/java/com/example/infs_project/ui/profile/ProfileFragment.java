@@ -1,5 +1,7 @@
 package com.example.infs_project.ui.profile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,21 +17,27 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.infs_project.R;
 
 public class ProfileFragment extends Fragment {
-
-    private ProfileViewModel profileViewModel;
+    private TextView totalPoints;
+    private TextView caloriePoints;
+    private TextView triviaPoints;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        profileViewModel =
-                ViewModelProviders.of(this).get(ProfileViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        profileViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+        totalPoints = root.findViewById(R.id.total_points);
+        caloriePoints = root.findViewById(R.id.calorie_points);
+        triviaPoints = root.findViewById(R.id.trivia_points);
+
+        SharedPreferences settings = getActivity().getSharedPreferences("quizApp", Context.MODE_PRIVATE);
+        int calorieScore = settings.getInt("totalScore", 0);
+        int triviaTotalScore = settings.getInt("triviaTotalScore", 0);
+        int overallScore = calorieScore+triviaTotalScore;
+
+        totalPoints.setText(Integer.toString(overallScore));
+        caloriePoints.setText(Integer.toString(calorieScore));
+        triviaPoints.setText(Integer.toString(triviaTotalScore));
+
         return root;
     }
 }
