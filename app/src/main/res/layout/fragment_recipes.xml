@@ -16,4 +16,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        app:layout_constraintTop_toBottomOf="@+id/text_dashboard"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/recipeImg"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="250dp"
+        android:layout_height="200dp" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/recipeImg"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/caloriesTitle"
+        android:text="Calories:" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/recipeImg"
+        app:layout_constraintStart_toEndOf="@+id/caloriesTitle"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/calories" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/caloriesTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/spoonacularScoreTitle"
+        android:text="Spoonacular Score:" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/calories"
+        app:layout_constraintStart_toEndOf="@+id/spoonacularScoreTitle"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spoonacular" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
