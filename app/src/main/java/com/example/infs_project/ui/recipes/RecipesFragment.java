@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -41,6 +42,7 @@ public class RecipesFragment extends Fragment implements GetAllRecipesAsyncDeleg
     private RecipesDatabase db;
     private GetAllRecipesAsyncDelegate getAllRecipesAsyncDelegate;
     private RecipeAdapter recipeAdapter;
+    private TextView loadingRecipesLabel;
 
     public static RecipesFragment newInstance() {
         return new RecipesFragment();
@@ -61,6 +63,7 @@ public class RecipesFragment extends Fragment implements GetAllRecipesAsyncDeleg
 
         searchButton = view.findViewById(R.id.search_button);
         searchInput = view.findViewById(R.id.search_input);
+        loadingRecipesLabel = view.findViewById(R.id.loading_recipes_label);
 
         db = RecipesDatabase.getInstance(this.getContext());
         getAllRecipesAsyncDelegate = (GetAllRecipesAsyncDelegate) this;
@@ -96,6 +99,7 @@ public class RecipesFragment extends Fragment implements GetAllRecipesAsyncDeleg
 
                         List<Recipe> recipesFiltered = Arrays.asList(filteredRecipesResponse.getResults());
 
+                        loadingRecipesLabel.setVisibility(View.GONE);
                         recipeAdapter.setData(recipesFiltered);
                         recyclerView.setAdapter(recipeAdapter);
 

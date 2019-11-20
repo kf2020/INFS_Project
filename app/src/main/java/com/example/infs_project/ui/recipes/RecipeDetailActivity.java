@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class RecipeDetailActivity extends AppCompatActivity implements GetRecipeByIdAsyncDelegate {
+public class RecipeDetailActivity extends AppCompatActivity {
     long recipeId;
     TextView title;
     TextView summary;
@@ -44,87 +44,19 @@ public class RecipeDetailActivity extends AppCompatActivity implements GetRecipe
         recipeId = getIntent().getLongExtra("id", 0);
         title.setText(getIntent().getStringExtra("title"));
 
+        // Get Recipe Info
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        final GetRecipeByIdAsyncDelegate getRecipeByIdAsyncDelegate = this;
-
-        RecipesDatabase db = RecipesDatabase.getInstance(this);
-
-        // Async Task to insert recipes into DB
-        GetRecipeByIdAsyncTask getRecipeByIdAsyncTask = new GetRecipeByIdAsyncTask();
-        getRecipeByIdAsyncTask.setDatabase(db);
-        getRecipeByIdAsyncTask.setDelegate(getRecipeByIdAsyncDelegate);
-        getRecipeByIdAsyncTask.execute(recipeId);
-
-
-    }
-
-    @Override
-    public void processFinish(Recipe output) {
-        final ArrayList<Recipe> recipes = new ArrayList<>();
-
-        if (output == null) {
-            // Get Recipe Description
-            final RequestQueue requestQueue =  Volley.newRequestQueue(this);
-
-            String url = "https://api.spoonacular.com/recipes/"+recipeId+"/information?includeNutrition=false";
-
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-
-                    Gson gson = new Gson();
-                    Recipe recipe = gson.fromJson(response, Recipe.class);
-                    recipes.add(recipe);
-
-                    title.setText(recipe.getTitle());
-                    getSummary(recipe);
-
-                    requestQueue.stop();
-                }
-            };
-
-            Response.ErrorListener errorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    Toast.makeText(getApplicationContext(),"The request failed: " //+ error.getMessage()
-                            , Toast.LENGTH_SHORT).show();
-                    requestQueue.stop();
-                }
-            };
-
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener,
-                    errorListener);
-
-            requestQueue.add(stringRequest);
-        } else {
-            recipes.add(output);
-            getSummary(output);
-        }
-
-
-    }
-
-    private void getSummary(Recipe recipe) {
-        Recipe finalRecipe = recipe;
-        // Load image if possible
-//        if (finalRecipe.getImage() != null) {
-//            Glide.with(this).load(finalRecipe.getImage()).into(recipeImg);
-//        }
-
-        // Get Recipe Description
-        final RequestQueue requestQueue =  Volley.newRequestQueue(this);
-
-        String url = "https://api.spoonacular.com/recipes/"+finalRecipe.getId()+"/summary?apikey=e66d050f20064f7f8531c769b5286774";
+        String url = "https://api.spoonacular.com/recipes/" + recipeId + "/information?includeNutrition=false";
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 Gson gson = new Gson();
-                SummaryResponse summaryResponse = gson.fromJson(response, SummaryResponse.class);
+                Recipe recipe = gson.fromJson(response, Recipe.class);
 
-                summary.setText(summaryResponse.getSummary());
+                title.setText(recipe.getTitle());
+                summary.setText(recipe.getInstructions());
 
                 requestQueue.stop();
             }
@@ -134,7 +66,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements GetRecipe
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Toast.makeText(getApplicationContext(),"The request failed: " //+ error.getMessage()
+                Toast.makeText(getApplicationContext(), "The request failed: " //+ error.getMessage()
                         , Toast.LENGTH_SHORT).show();
                 requestQueue.stop();
             }
@@ -144,5 +76,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements GetRecipe
                 errorListener);
 
         requestQueue.add(stringRequest);
+
     }
+
 }

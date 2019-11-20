@@ -17,7 +17,7 @@ public abstract class RecipesDatabase extends RoomDatabase {
     public static RecipesDatabase getInstance(Context context) {
 
         if(instance == null) {
-            instance = Room.databaseBuilder(context, RecipesDatabase.class, "recipeDb3")
+            instance = Room.databaseBuilder(context, RecipesDatabase.class, "recipeDb4")
                     //.allowMainThreadQueries()    <== IMPORTANT TO NOTE:
                     //     This is NOT correct to do in a completed app.
                     //     Next week we will fix it, but for now this

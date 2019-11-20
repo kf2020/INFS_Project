@@ -11,6 +11,16 @@ public class Recipe {
     String title;
     String image; // URL
 
+    int preparationMinutes;
+    int cookingMinutes;
+
+    String sourceUrl;
+    String spoonacularSourceUrl;
+
+    int healthScore;
+
+    String instructions;
+
     float spoonacularScore;
 
     int calories;
@@ -64,5 +74,61 @@ public class Recipe {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public int getPreparationMinutes() {
+        return preparationMinutes;
+    }
+
+    public void setPreparationMinutes(int preparationMinutes) {
+        this.preparationMinutes = preparationMinutes;
+    }
+
+    public int getCookingMinutes() {
+        return cookingMinutes;
+    }
+
+    public void setCookingMinutes(int cookingMinutes) {
+        this.cookingMinutes = cookingMinutes;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
+    }
+
+    public String getSpoonacularSourceUrl() {
+        return spoonacularSourceUrl;
+    }
+
+    public void setSpoonacularSourceUrl(String spoonacularSourceUrl) {
+        this.spoonacularSourceUrl = spoonacularSourceUrl;
+    }
+
+    public int getHealthScore() {
+        return healthScore;
+    }
+
+    public void setHealthScore(int healthScore) {
+        this.healthScore = healthScore;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public int getReadyInMinutes() {
+        return readyInMinutes;
+    }
+
+    public void setReadyInMinutes(int readyInMinutes) {
+        this.readyInMinutes = readyInMinutes;
     }
 }
