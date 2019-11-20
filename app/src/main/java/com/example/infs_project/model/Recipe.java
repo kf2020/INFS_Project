@@ -15,7 +15,7 @@ public class Recipe {
 
     int calories;
     int readyInMinutes;
-    String description;
+    String summary;
 
 
     public long getId() {
@@ -56,5 +56,13 @@ public class Recipe {
 
     public void setCalories(int calories) {
         this.calories = calories;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }
