@@ -27,7 +27,6 @@ public class TriviaQuizFragment extends Fragment {
         triviaQuizViewModel =
                 ViewModelProviders.of(this).get(TriviaQuizViewModel.class);
         View root = inflater.inflate(R.layout.fragment_trivia, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
 
         triviaQuizButton = root.findViewById(R.id.trivia_quiz_button);
         triviaQuizButton.setOnClickListener(new View.OnClickListener() {

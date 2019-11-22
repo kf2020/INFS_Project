@@ -1,67 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorGrey"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/text_dashboard"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/colorWhite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
 
-    <ImageView
-        app:layout_constraintTop_toBottomOf="@+id/text_dashboard"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/recipeImg"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_width="250dp"
-        android:layout_height="200dp" />
+        <EditText
+            android:id="@+id/search_input"
+            android:layout_width="325dp"
+            android:layout_marginLeft="12dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></EditText>
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@+id/recipeImg"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:id="@+id/caloriesTitle"
-        android:text="Calories:" />
+        <ImageButton
+            android:id="@+id/search_button"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@android:color/holo_green_light"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/magnifying_glass"
+            ></ImageButton>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        app:layout_constraintTop_toBottomOf="@+id/recipeImg"
-        app:layout_constraintStart_toEndOf="@+id/caloriesTitle"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
+        android:id="@+id/loading_recipes_label"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/calories" />
+        app:layout_constraintTop_toBottomOf="@id/search_area"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="40dp"
+        android:textColor="@android:color/black"
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@+id/caloriesTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:id="@+id/spoonacularScoreTitle"
-        android:text="Spoonacular Score:" />
+        android:text="Loading recipes..."
+        />
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@+id/calories"
-        app:layout_constraintStart_toEndOf="@+id/spoonacularScoreTitle"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/recycler_recipes"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spoonacular" />
+        android:background="@drawable/grey_background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_area"
+        tools:context=".fragments.RecipesFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_main"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

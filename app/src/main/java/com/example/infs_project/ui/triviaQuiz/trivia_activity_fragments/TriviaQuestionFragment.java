@@ -160,7 +160,7 @@ public class TriviaQuestionFragment extends Fragment {
         final ArrayList<String> facts = new ArrayList<>();
 
         //Api url for random trivia fact
-        String url = "https://api.spoonacular.com/food/trivia/random?apiKey=86828503a4f24dc5acab1e6988ce07e4";
+        String url = "https://api.spoonacular.com/food/trivia/random?apiKey=e66d050f20064f7f8531c769b5286774";
 
         for (int i = 0; i < 5; i++) {
         // create response listener
@@ -215,7 +215,7 @@ public class TriviaQuestionFragment extends Fragment {
     private void setUpTrivia(ArrayList<String> facts) {
 
         String[] falseFactsArr = {"An average ear of corn has odd number of rows.",
-        "Carrots only exist in an orange colour.",
+                "Carrots only exist in an orange colour.",
                 "Raw eels can be consumed directly by humans, as they are not poisonous.",
                 "The classic fortune cookie first originated in Hunan, China.",
                 "Cucumbers were first grown in Western Australia.",
@@ -258,7 +258,7 @@ public class TriviaQuestionFragment extends Fragment {
 
         // {"Right Answer", "Choice1"}
         for (int i = 0; i < 5; i++) {
-            int randomNum = random.nextInt(facts.size());
+            int randomNum = random.nextInt(falseFacts.size());
 
             triviaData[i][0] = facts.get(i);
             triviaData[i][1] = falseFacts.get(randomNum);

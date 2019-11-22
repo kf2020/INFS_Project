@@ -190,7 +190,7 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
         final RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
 
         //Need correct api url with key to get 5 random recipes
-        String url = "https://api.spoonacular.com/recipes/random?number=10&apiKey=86828503a4f24dc5acab1e6988ce07e4";
+        String url = "https://api.spoonacular.com/recipes/random?number=10&apiKey=e66d050f20064f7f8531c769b5286774";
 
         final InsertRecipesAsyncDelegate insertRecipesAsyncDelegate = this;
         final Recipe recipesArr[] = new Recipe[10];
@@ -223,7 +223,7 @@ public class QuestionFragment extends Fragment implements InsertRecipesAsyncDele
                 for(int i = 0; i < 10 ; i++) {
 
                     //Need correct api url with key to get 5 random recipes
-                    String url2 = "https://api.spoonacular.com/recipes/"+recipesArr[i].getId()+"/nutritionWidget.json?apiKey=86828503a4f24dc5acab1e6988ce07e4";
+                    String url2 = "https://api.spoonacular.com/recipes/"+recipesArr[i].getId()+"/nutritionWidget.json?apiKey=e66d050f20064f7f8531c769b5286774";
 
 
                     // create response listener
